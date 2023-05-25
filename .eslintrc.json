@@ -9,5 +9,5 @@
     },
     "plugins": ["@typescript-eslint"],
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-    "ignorePatterns": ["out", "dist", "node_modules", ".vscode-test", "webpack.config.js"]
+    "ignorePatterns": ["out", "dist", "node_modules", ".vscode-test", "webpack.config.js", "openvscode-server-*"]
 }

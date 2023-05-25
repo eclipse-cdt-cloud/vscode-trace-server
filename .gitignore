@@ -2,5 +2,6 @@
 /.vscode-test/
 /dist/
 /node_modules/
+/openvscode-server-*
 /out/
 /vscode-trace-server-*.vsix
