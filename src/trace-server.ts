@@ -6,6 +6,7 @@ import * as vscode from 'vscode';
 // Based on github.com/eclipse-cdt-cloud/vscode-trace-extension/blob/master/vscode-trace-extension/package.json
 // -for naming consistency purposes across sibling extensions/settings:
 const section = 'trace-server.traceserver';
+const clientSection = 'trace-compass.traceserver';
 
 const key = 'pid';
 const millis = 10000;
@@ -128,8 +129,12 @@ export class TraceServer {
         return vscode.workspace.getConfiguration(section);
     }
 
+    private getClientSettings() {
+        return vscode.workspace.getConfiguration(clientSection);
+    }
+
     private getServerUrl() {
-        const from = this.getSettings();
+        const from = this.getClientSettings();
         return this.getUrl(from) + '/' + this.getApiPath(from);
     }
 
