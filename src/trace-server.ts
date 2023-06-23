@@ -199,11 +199,17 @@ export class TraceServer {
     }
 
     private setStatusIfAvailable(started: boolean) {
-        const fromTraceExtension = 'serverStatus';
-        if (started) {
-            vscode.commands.executeCommand(fromTraceExtension + '.started');
-        } else {
-            vscode.commands.executeCommand(fromTraceExtension + '.stopped');
-        }
+        const commands = vscode.commands.getCommands();
+        commands.then((commandArray) => {
+            const fromTraceExtension = 'serverStatus';
+            const startCommand = fromTraceExtension + '.started';
+            if (commandArray.findIndex(val => val === (startCommand)) > 0) {
+                if (started) {
+                    vscode.commands.executeCommand(startCommand);
+                } else {
+                    vscode.commands.executeCommand(fromTraceExtension + '.stopped');
+                }
+            }
+        });
     }
 }
