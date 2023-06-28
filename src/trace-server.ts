@@ -17,7 +17,7 @@ const suffix = ' failure or so.';
 export class TraceServer {
     private server: ChildProcess | undefined;
 
-    private start(context: vscode.ExtensionContext | undefined) {
+    private async start(context: vscode.ExtensionContext | undefined) {
         const from = this.getSettings();
         const server = spawn(this.getPath(from), this.getArgs(from));
 
@@ -26,8 +26,8 @@ export class TraceServer {
             return;
         }
         this.server = server;
-        context?.workspaceState.update(key, this.server.pid);
-        this.waitFor(context);
+        await context?.workspaceState.update(key, this.server.pid);
+        await this.waitFor(context);
     }
 
     async stopOrReset(context: vscode.ExtensionContext | undefined) {
@@ -46,7 +46,7 @@ export class TraceServer {
                     clearTimeout(id);
                 });
             }
-            vscode.window.withProgress(
+            await vscode.window.withProgress(
                 {
                     location: vscode.ProgressLocation.Notification,
                     title: prefix,
@@ -67,7 +67,7 @@ export class TraceServer {
         } else {
             vscode.window.showWarningMessage(not);
         }
-        context?.workspaceState.update(key, none);
+        await context?.workspaceState.update(key, none);
         this.server = undefined;
     }
 
@@ -77,14 +77,14 @@ export class TraceServer {
         const foreigner = await this.isUp();
 
         if (stopped && !foreigner) {
-            this.start(context);
+            await this.start(context);
         } else if (foreigner) {
             vscode.window.showWarningMessage(prefix + ' not started as already running.');
         } else {
             // Not UP but there is still a pid stored.
             // Likely because Codium or so exited without one using the stop command prior.
-            context?.workspaceState.update(key, none);
-            this.start(context);
+            await context?.workspaceState.update(key, none);
+            await this.start(context);
         }
     }
 
@@ -139,7 +139,7 @@ export class TraceServer {
     }
 
     private async waitFor(context: vscode.ExtensionContext | undefined) {
-        vscode.window.withProgress(
+        await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
                 title: prefix,
@@ -159,7 +159,7 @@ export class TraceServer {
                     }
                     if (timeout) {
                         this.showError(prefix + ' startup timed-out after ' + millis + 'ms.');
-                        this.stopOrReset(context);
+                        await this.stopOrReset(context);
                         break;
                     }
                 }

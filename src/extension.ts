@@ -19,15 +19,15 @@ export function deactivate() {
 }
 
 function registerStopOrReset(context: vscode.ExtensionContext | undefined): vscode.Disposable {
-    return vscode.commands.registerCommand(stopOrReset, () => {
-        return server.stopOrReset(context);
+    return vscode.commands.registerCommand(stopOrReset, async () => {
+        await server.stopOrReset(context);
     });
 }
 export const registerStopOrReset_test = registerStopOrReset;
 
 function registerStartIfStopped(context: vscode.ExtensionContext | undefined): vscode.Disposable {
-    return vscode.commands.registerCommand(startIfStopped, () => {
-        server.startIfStopped(context);
+    return vscode.commands.registerCommand(startIfStopped, async () => {
+        await server.startIfStopped(context);
     });
 }
 export const registerStartIfStopped_test = registerStartIfStopped;
