@@ -205,10 +205,10 @@ export class TraceServer {
 
     private setStatusIfAvailable(started: boolean) {
         const commands = vscode.commands.getCommands();
-        commands.then((commandArray) => {
+        commands.then(commandArray => {
             const fromTraceExtension = 'serverStatus';
             const startCommand = fromTraceExtension + '.started';
-            if (commandArray.findIndex(val => val === (startCommand)) > 0) {
+            if (commandArray.findIndex(val => val === startCommand) > 0) {
                 if (started) {
                     vscode.commands.executeCommand(startCommand);
                 } else {
