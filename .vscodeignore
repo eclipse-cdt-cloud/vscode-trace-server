@@ -8,6 +8,7 @@
 .vscode/**
 .yarnrc
 node_modules/**
+openvscode-server-*/**
 out/**
 src/**
 webpack.config.js

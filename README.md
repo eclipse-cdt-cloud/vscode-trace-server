@@ -33,6 +33,7 @@ Alternatively, launch `Extension Tests` under `Run and Debug`.
 1. After [having built](#build) at least once, run `yarn vsce:package` ([more][vsce]) at will.
 1. [Install][install] the hereby generated `vscode-trace-server-*.vsix` file.
 1. Alternatively, simply launch the packaged extension using `Run Extension`.
+1. Alternatively, see [these steps](#openvscode-server) for an `openvscode-server` deployment.
 1. Through `Command Palette`, the `Trace Server:` start/stop commands should be available.
 
 This extension can be installed in either one (or many) of:
@@ -48,6 +49,22 @@ A nearby [companion extension][vscode-trace-extension] installation renders a `T
 * This is necessary beside uninstalling the extension from the Theia UI, that is.
 * Without this manual extension directory removal, Blueprint won't use the amended version.
 * Stepping the extension version upon an amend or update shouldn't trigger that issue.
+
+### openvscode-server
+
+This may be used if willing to deploy this extension within [openvscode-server][linux].
+
+1. Any local `~/.openvscode-server/` content will be (re)used if existing; remove at will (prior).
+1. Run `yarn openvscode-server:install` to install `openvscode-server` locally, anywhere, once or so.
+1. Run `yarn openvscode-server:start` to start the `openvscode-server` anytime, anywhere installed.
+
+The server options passed through that start command are scripted in [./package.json](package.json).
+
+* Run `yarn openvscode-server:start --help` to [list and show every such option and more][linux].
+* Overall, this extension deployment is therefore virtually possible either locally or remotely.
+* The client companion [vscode-trace-extension][vscode-trace-extension] is installed elsewhere.
+* Thus, `vscode-trace-extension`'s `Trace Server` status bar item gets rendered from that client.
+* Otherwise co-locating these two extensions lend interactions that aren't possible here, currently.
 
 ## Configuration
 
@@ -100,6 +117,7 @@ This extension is currently under [initial development][backlog].
 [guide]: https://code.visualstudio.com/api/get-started/your-first-extension
 [install]: https://code.visualstudio.com/docs/editor/extension-marketplace#_install-from-a-vsix
 [item]: https://github.com/eclipse-cdt-cloud/vscode-trace-extension/pull/120
+[linux]: https://github.com/gitpod-io/openvscode-server#linux
 [markdownlint]: https://open-vsx.org/extension/DavidAnson/vscode-markdownlint
 [matcher]: https://open-vsx.org/extension/amodio/tsl-problem-matcher
 [prettier]: https://open-vsx.org/extension/esbenp/prettier-vscode

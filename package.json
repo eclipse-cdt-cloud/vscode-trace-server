@@ -4,7 +4,7 @@
     "description": "VsCode extension for executing a trace server",
     "version": "0.1.0",
     "engines": {
-        "vscode": "^1.78.0"
+        "vscode": "^1.77.3"
     },
     "publisher": "tracecompass-community",
     "categories": [
@@ -57,7 +57,9 @@
         "watch-tests": "tsc -p . -w --outDir out",
         "pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
         "lint": "eslint src --ext ts",
-        "test": "node ./out/test/runTest.js"
+        "test": "node ./out/test/runTest.js",
+        "openvscode-server:install": "curl -L -o openvscode-server-v1.77.3-linux-x64.tar.gz https://github.com/gitpod-io/openvscode-server/releases/download/openvscode-server-v1.77.3/openvscode-server-v1.77.3-linux-x64.tar.gz && tar -xf openvscode-server-v1.77.3-linux-x64.tar.gz",
+        "openvscode-server:start": "cd openvscode-server-v1.77.3-linux-x64/bin && ./openvscode-server --without-connection-token --telemetry-level off --install-extension $INIT_CWD/vscode-trace-server-0.1.0.vsix --start-server"
     },
     "dependencies": {
         "tree-kill": "^1.2.2",
@@ -67,7 +69,7 @@
         "@types/glob": "^8.1.0",
         "@types/mocha": "^10.0.1",
         "@types/node": "16.x",
-        "@types/vscode": "^1.78.0",
+        "@types/vscode": "^1.77.3",
         "@typescript-eslint/eslint-plugin": "^5.59.1",
         "@typescript-eslint/parser": "^5.59.1",
         "@vscode/test-electron": "^2.3.0",
