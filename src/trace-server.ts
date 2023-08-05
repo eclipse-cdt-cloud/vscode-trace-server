@@ -71,7 +71,7 @@ export class TraceServer {
         this.server = undefined;
     }
 
-    async startIfStopped(context: vscode.ExtensionContext | undefined) {
+    async startIfStopped(context: vscode.ExtensionContext | undefined): Promise<string> {
         const pid = context?.workspaceState.get(key);
         const stopped = !pid || pid === none;
         const foreigner = await this.isUp();
@@ -86,6 +86,7 @@ export class TraceServer {
             await context?.workspaceState.update(key, none);
             await this.start(context);
         }
+        return this.getUrl(this.getSettings());
     }
 
     private getPath(configuration: vscode.WorkspaceConfiguration): string {
