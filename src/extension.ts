@@ -14,8 +14,8 @@ export function activate(context: vscode.ExtensionContext) {
     activation = context;
 }
 
-export function deactivate() {
-    server.stopOrReset(activation);
+export async function deactivate() {
+    await server.shutdown(activation);
 }
 
 function registerStopOrReset(context: vscode.ExtensionContext | undefined): vscode.Disposable {

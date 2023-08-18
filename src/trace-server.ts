@@ -13,6 +13,7 @@ const millis = 10000;
 const none = -1;
 const prefix = 'Trace Server';
 const suffix = ' failure or so.';
+const SHUTDOWN_DELAY = 2000;
 
 export class TraceServer {
     private server: ChildProcess | undefined;
@@ -69,6 +70,24 @@ export class TraceServer {
         }
         await context?.workspaceState.update(key, none);
         this.server = undefined;
+    }
+
+    async shutdown(context: vscode.ExtensionContext) {
+        // Take the pid from the server instead from workspace state because
+        // during shutdown the workspace can't be queried anymore
+        const pid = this.server ? this.server.pid : undefined;
+        if (!pid) {
+            return;
+        }
+        if (pid) {
+            treeKill(pid);
+            // Allow the treeKill to finish collecting and killing all
+            // spawned processes.
+            await new Promise(resolve => setTimeout(resolve, SHUTDOWN_DELAY));
+
+            // Try to reset pid in workspace state
+            await context?.workspaceState.update(key, none);
+        }
     }
 
     async startIfStopped(context: vscode.ExtensionContext | undefined) {
