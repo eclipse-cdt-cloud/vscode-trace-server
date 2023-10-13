@@ -15,7 +15,9 @@
         "type": "git",
         "url": "https://github.com/eclipse-cdt-cloud/vscode-trace-server.git"
     },
-    "activationEvents": [],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
     "main": "./dist/extension.js",
     "extensionKind": [
         "workspace"
@@ -83,5 +85,8 @@
         "typescript": "^5.0.4",
         "webpack": "^5.81.0",
         "webpack-cli": "^5.0.2"
-    }
+    },
+    "extensionDependencies": [
+        "eclipse-cdt.vscode-trace-extension"
+    ]
 }
