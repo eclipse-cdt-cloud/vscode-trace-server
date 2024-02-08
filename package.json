@@ -2,7 +2,7 @@
     "name": "vscode-trace-server",
     "displayName": "VSCode Trace Server",
     "description": "Companion extension to the Trace Viewer for VSCode, that makes it easier to start/stop a local trace server",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "license": "MIT",
     "engines": {
         "vscode": "^1.78.0"
