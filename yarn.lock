@@ -1554,7 +1554,7 @@ js-yaml@4.1.0, js-yaml@^4.1.0:
   dependencies:
     argparse "^2.0.1"
 
-"json-bigint@github:sidorares/json-bigint#2c0a5f896d7888e68e5f4ae3c7ea5cd42fd54473":
+json-bigint@sidorares/json-bigint#2c0a5f896d7888e68e5f4ae3c7ea5cd42fd54473:
   version "1.0.0"
   resolved "https://codeload.github.com/sidorares/json-bigint/tar.gz/2c0a5f896d7888e68e5f4ae3c7ea5cd42fd54473"
   dependencies:

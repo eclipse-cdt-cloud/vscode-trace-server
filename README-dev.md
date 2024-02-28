@@ -4,7 +4,6 @@ This file contains information that could be interesting to developers, that wan
 
 For general information, see the main [README.md](README.md)
 
-
 * This is a TypeScript extension, officially named `vscode-trace-server`.
 * It is meant as companion to the [vscode-trace-extension][vscode-trace-extension].
 * It registers `Trace Server:` start/stop commands, for a default instance locally.
@@ -22,7 +21,25 @@ This README is the usual entry point for documenting this extension.
 
 ## Build
 
-Run `yarn`, which should automatically include `yarn install`.
+First, you need Node.js and yarn:
+
+It's suggested to install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to manage node on your machine. Once that's done, install the required version:
+
+```bash
+   nvm install 18
+   # optional: make it the default version
+   nvm alias default
+   # or set it every time like so
+   nvm use 18
+```
+
+Then install `yarn`:
+
+```bash
+npm i -g yarn  # the default version should be ok
+```
+
+To build, run `yarn`, which should automatically trigger `yarn install`.
 
 * This extension is bundled using `webpack`, originally based on [the guide][guide].
 * There is only a modest automated CI test suite being run on GitHub

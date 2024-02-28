@@ -17,12 +17,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16]
+        node-version: [18]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn --frozen-lockfile
@@ -44,12 +44,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16]
+        node-version: [18]
 
     steps:
     - name: Check out Git repository
-      uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+      uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
     # ESLint and Prettier must be in `package.json`
@@ -68,17 +68,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16]
+        node-version: [18]
     # Only execute when the trigger was a tag (new release)
     if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # restore extension from the built-test job
       - uses: actions/download-artifact@v4
         with:
           name: extension
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
@@ -101,16 +101,16 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [16]
+        node-version: [18]
     # Only execute when the trigger was a tag (new release)
     if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v')
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: extension
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
