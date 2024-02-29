@@ -9,7 +9,7 @@ const startIfStopped = extensionId + '.start-if-stopped';
 let activation: vscode.ExtensionContext;
 
 export function activate(context: vscode.ExtensionContext) {
-    const vscodeTraceExtension = vscode.extensions.getExtension('eclipse-cdt.vscode-trace-extension');
+    const vscodeTraceExtension = vscode.extensions.getExtension('eclipse-cdt.vscode-trace-viewer');
     if (vscodeTraceExtension) {
         const api = vscodeTraceExtension.exports;
         const contributor = {

@@ -102,6 +102,6 @@
         "webpack-cli": "^5.0.2"
     },
     "extensionDependencies": [
-        "eclipse-cdt.vscode-trace-extension"
+        "eclipse-cdt.vscode-trace-viewer"
     ]
 }
