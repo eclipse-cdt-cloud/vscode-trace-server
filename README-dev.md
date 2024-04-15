@@ -98,6 +98,37 @@ yarn format:write
 
 ```
 
+## Release/publish
+
+We use GitHub CI to create a GitHub release and the corresponding git tag, and also to publish this repo's VSCode extension to the `open-vsx.org` and the `Visual Studio Marketplace` registries.
+
+### Triggering a new release
+
+Whenever a new release is desired, it can be triggered through a PR, as per the following:
+
+Create a new branch for your PR, based on the repo's latest state. e.g.
+
+```bash
+git branch new-release && git checkout new-release
+```
+
+Then decide if the release shall be a `Major`, `Minor` or `Patch` release and use the corresponding command below to step the package's versions, according to the release type. A new release commit will be created:
+
+``` bash
+yarn version:major
+# or
+yarn version:minor
+# or
+yarn version:patch
+```
+
+Modify the _version tag_ in file `./RELEASE`, to match the new release. Amend the release commit to include this change:
+
+```bash
+git add RELEASE && git commit --amend
+```
+
+Finally, push the branch to the main repository (not a fork!) and use it to create a PR. When the PR is merged, a GitHub release should be created with auto-generated release notes, as well as a git tag. Then the `publish-*` CI jobs should trigger, and if everything goes well, publish the new version of the extension to both registries.
 
 [backlog]: https://github.com/eclipse-cdt-cloud/vscode-trace-extension/issues/15
 [blueprint]: https://theia-ide.org/docs/blueprint_download

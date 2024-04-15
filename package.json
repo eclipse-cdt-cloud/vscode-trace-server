@@ -75,6 +75,9 @@
         "format:write": "prettier --write ./src",
         "format:check": "prettier --check ./src",
         "test": "node ./out/test/runTest.js",
+        "version:major": "lerna version major --exact --no-push --git-tag-command /usr/bin/true --yes -m \"Release %s (Major)\"",
+        "version:minor": "lerna version minor --exact --no-push --git-tag-command /usr/bin/true --yes -m \"Release %s (Minor)\"",
+        "version:patch": "lerna version patch --exact --no-push --git-tag-command /usr/bin/true --yes -m \"Release %s (Patch)\"",
         "license:check": "npx dash-licenses-wrapper  --configFile=./configs/license-check-config.json",
         "license:check:review": "npx dash-licenses-wrapper  --configFile=./configs/license-check-config.json --review"
     },
@@ -94,6 +97,7 @@
         "@vscode/vsce": "^2.20.1",
         "eslint": "8.43.0",
         "glob": "^8.1.0",
+        "lerna": "^7.0.0",
         "mocha": "^10.2.0",
         "prettier": "2.8.8",
         "ts-loader": "^9.4.2",
