@@ -154,7 +154,8 @@ export class TraceServer {
 
     private getServerUrl() {
         const from = this.getClientSettings();
-        return this.getUrl(from) + '/' + this.getApiPath(from);
+        const baseUrl = this.getUrl(from);
+        return baseUrl.endsWith('/') ? baseUrl + this.getApiPath(from) : baseUrl + '/' + this.getApiPath(from);
     }
 
     private async waitFor(context: vscode.ExtensionContext | undefined) {
