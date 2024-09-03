@@ -30,6 +30,19 @@ jobs:
       uses: coactions/setup-xvfb@v1
       with:
         run: yarn test
+
+    - name: Test for "ovsx" presence3
+      run: npx --verbose ovsx -V ; npx --verbose ovsx -V | true
+    - name: Test for "ovsx" presence3c
+      run:  npx --verbose ovsx -V
+    - name: Test for "ovsx" presence4
+      run: pwd; ls -a; ls -al node_modules/ | true
+
+    - name: Test for "ovsx" presence1
+      run: which ovsx | true
+    - name: Test for "ovsx" presence2
+      run: ovsx -V | true      
+
     - name: Package as VSCode Extension
       run: yarn vsce:package
     # Save the extension .vsix file for potential publishing
