@@ -51,6 +51,7 @@
             "properties": {
                 "trace-server.traceserver.path": {
                     "type": "string",
+                    "scope" : "machine",
                     "default": "/usr/bin/tracecompass-server",
                     "description": "Enter the trace server's binary path, executable included. Eg: /usr/bin/tracecompass-server."
                 },
