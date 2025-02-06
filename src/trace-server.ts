@@ -2,6 +2,7 @@ import { ChildProcess, spawn } from 'child_process';
 import { TspClient } from 'tsp-typescript-client/lib/protocol/tsp-client';
 import treeKill from 'tree-kill';
 import * as vscode from 'vscode';
+import { parseArgs } from './argparse';
 
 // Based on github.com/eclipse-cdt-cloud/vscode-trace-extension/blob/master/vscode-trace-extension/package.json
 // -for naming consistency purposes across sibling extensions/settings:
@@ -122,7 +123,7 @@ export class TraceServer {
         if (!args) {
             args = '';
         }
-        return args.split(' ');
+        return parseArgs(args);
     }
     getArgs_test = this.getArgs;
 
