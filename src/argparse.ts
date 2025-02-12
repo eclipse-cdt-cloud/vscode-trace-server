@@ -61,7 +61,7 @@ class ArgExtractor {
                     arg = arg.concat(peek);
                 } else {
                     // end of quotation; just consume character without adding literally to arg
-                    inQuotedString = false;                    
+                    inQuotedString = false;
                 }
             } else {
                 // open double quotation
