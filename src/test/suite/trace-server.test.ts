@@ -16,7 +16,7 @@ suite('TraceServer Test Suite', () => {
 
     test(prefix + 'arguments', () => {
         const args = server.getArgs_test(from);
-        assert.deepEqual(args, ['']);
+        assert.deepEqual(args, []);
     });
 
     test(prefix + 'url', () => {
