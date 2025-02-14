@@ -33,7 +33,7 @@ Note: this extension is only aware of a running trace server if it started of he
 
 ### Stopping the Trace Server
 
-Use the `Trace Server: stop or reset` command to kill both processes, stopping the server. If the server was stopped outside the application (e.g. killed), using this command will reset the known `pid` and allow to start it again.
+Use the `Trace Server: Stop or Reset` command to kill both processes, stopping the server. If the server was stopped outside the application (e.g. killed), using this command will reset the known `pid` and allow to start it again.
 
 Note that exiting the application should automatically stop the started server if started through it. 
 
