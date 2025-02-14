@@ -27,7 +27,7 @@ If this extension is configured correctly, it will automatically start the trace
 
 Manual start:
 
-Use the `Trace Server: start (if stopped)` command to launch the trace server instance. The latter should be made of two related processes; to find them, `grep` for `tracecompass` or the like.
+Use the `Trace Server: Start` command to launch the trace server instance. The latter should be made of two related processes; to find them, `grep` for `tracecompass` or the like.
 
 Note: this extension is only aware of a running trace server if it started of helped start it, as per above. It will not know if you started the server on the CLI or outside using other means than described above.
 
