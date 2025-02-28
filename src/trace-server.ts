@@ -13,18 +13,46 @@ const key = 'pid';
 const millis = 10000;
 const none = -1;
 const prefix = 'Trace Server';
-const suffix = ' failure or so.';
+const suffix = ' failure.';
 const SHUTDOWN_DELAY = 2000;
 
 export class TraceServer {
     private server: ChildProcess | undefined;
+    private errorString: string | undefined;
+    private stderr: string | undefined;
+    private context: vscode.ExtensionContext | undefined;
+
+    private handleStartUpError = (code: number | null): void => {
+        this.errorString = 'Code: ' + code + (this.stderr !== undefined ? '. Error message: ' + this.stderr : '.');
+    };
+
+    private handleStartUpStderr = (data: string | undefined): void => {
+        this.stderr = data;
+    };
+
+    private handleError = (code: number | null): void => {
+        if (this.context) {
+            this.context?.workspaceState.update(key, none);
+        }
+        this.server = undefined;
+        this.setStatusIfAvailable(false);
+        vscode.window.showErrorMessage(
+            prefix + ' exited unexpectedly' + (code !== null ? ' with code ' + code : '') + '!'
+        );
+    };
 
     private async start(context: vscode.ExtensionContext | undefined) {
         const from = this.getSettings();
         const server = spawn(this.getPath(from), this.getArgs(from));
 
         if (!server.pid) {
-            this.showError(prefix + ' startup' + suffix);
+            // Failed to spawn the child process due to errors, PID is undefined and an error is emitted.
+            await new Promise<void>(resolve => {
+                server.once('error', error => {
+                    this.showError(prefix + ' startup' + suffix + ': ' + error);
+                });
+                resolve();
+            });
             return;
         }
         this.server = server;
@@ -32,7 +60,7 @@ export class TraceServer {
         await this.waitFor(context);
     }
 
-    async stopOrReset(context: vscode.ExtensionContext | undefined) {
+    async stopOrReset(context: vscode.ExtensionContext | undefined, reportNotStopped: boolean = true) {
         const pid: number | undefined = context?.workspaceState.get(key);
         const not = prefix + ' not stopped as none running or owned by us.';
         if (pid === none) {
@@ -43,6 +71,8 @@ export class TraceServer {
             let id: NodeJS.Timeout;
             // recovering from workspaceState => no this.server set
             if (this.server) {
+                this.server.off('exit', this.handleError);
+                this.context = undefined;
                 this.server.once('exit', () => {
                     this.showStatus(false);
                     clearTimeout(id);
@@ -66,7 +96,7 @@ export class TraceServer {
                     });
                 }
             );
-        } else {
+        } else if (reportNotStopped) {
             vscode.window.showWarningMessage(not);
         }
         await context?.workspaceState.update(key, none);
@@ -81,6 +111,9 @@ export class TraceServer {
             return;
         }
         if (pid) {
+            // Remove all existing listeners to avoid unnecessary pop-ups
+            this.server?.off('exit', this.handleError);
+            this.context = undefined;
             treeKill(pid);
             // Allow the treeKill to finish collecting and killing all
             // spawned processes.
@@ -160,6 +193,12 @@ export class TraceServer {
     }
 
     private async waitFor(context: vscode.ExtensionContext | undefined) {
+        if (this.server === undefined) {
+            return;
+        }
+
+        this.context = context;
+        const server = this.server;
         await vscode.window.withProgress(
             {
                 location: vscode.ProgressLocation.Notification,
@@ -168,27 +207,52 @@ export class TraceServer {
             },
             async progress => {
                 progress.report({ message: 'starting up...' });
-                let timeout = false;
-                const timeoutId = setTimeout(() => (timeout = true), millis);
+                try {
+                    let timeout = false;
+                    const timeoutId = setTimeout(() => (timeout = true), millis);
 
-                // eslint-disable-next-line no-constant-condition
-                while (true) {
-                    if (await this.isUp()) {
-                        this.showStatus(true);
-                        clearTimeout(timeoutId);
-                        break;
+                    server.stderr?.once('data', this.handleStartUpStderr);
+                    server.once('exit', this.handleStartUpError);
+
+                    // eslint-disable-next-line no-constant-condition
+                    while (true) {
+                        if (await this.isUp()) {
+                            clearTimeout(timeoutId);
+                            this.showStatus(true);
+                            break;
+                        }
+
+                        // Check if trace server exited with error
+                        if (this.errorString !== undefined) {
+                            const errorString = this.errorString;
+                            this.errorString = undefined;
+                            throw new Error(errorString);
+                        }
+
+                        // Check for overall timeout
+                        if (timeout) {
+                            await this.stopOrReset(context, false);
+                            throw new Error(prefix + ' startup timed-out after ' + millis + 'ms.');
+                        }
+
+                        // Wait before trying again
+                        await new Promise<void>(resolve => setTimeout(() => resolve(), 1000));
                     }
-                    if (timeout) {
-                        this.showError(prefix + ' startup timed-out after ' + millis + 'ms.');
-                        await this.stopOrReset(context);
-                        break;
-                    }
+                } catch (error) {
+                    this.showErrorDetailed(prefix + ' starting up' + suffix, error as Error);
+                    return;
+                } finally {
+                    // Remove all listener needed during startup
+                    server.off('exit', this.handleStartUpError);
+                    server.stderr?.off('data', this.handleStartUpStderr);
+                    // Add listener to catch when server exits unexpectedly
+                    server.once('exit', this.handleError);
                 }
             }
         );
     }
 
-    private async isUp() {
+    private async isUp(): Promise<boolean> {
         const client = new TspClient(this.getServerUrl());
         const health = await client.checkHealth();
         const status = health.getModel()?.status;
@@ -198,18 +262,15 @@ export class TraceServer {
     private async showError(message: string) {
         console.error(message);
         vscode.window.showErrorMessage(message);
-        const disclaimer = ' running, despite this error.';
         const up = await this.isUp();
         if (up) {
-            vscode.window.showWarningMessage(prefix + ' is still' + disclaimer);
-        } else {
-            vscode.window.showWarningMessage(prefix + ' is not' + disclaimer);
+            vscode.window.showWarningMessage(prefix + ' is still running, despite this error.');
         }
         this.setStatusIfAvailable(up);
     }
 
     private showErrorDetailed(message: string, error: Error) {
-        const details = error.name + ' - ' + error.message;
+        const details = error.name + ' - ' + error?.message;
         vscode.window.showErrorMessage(details);
         console.error(details);
         this.showError(message);
