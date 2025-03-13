@@ -36,7 +36,7 @@ jobs:
     # (when appropriate)
     - uses: actions/upload-artifact@v4
       with:
-        name: extension
+        name: extension-${{ matrix.node-version }}
         path: vscode-trace-server-*.vsix
       if: github.event_name == 'release' && startsWith(github.ref, 'refs/tags/v') && github.repository == 'eclipse-cdt-cloud/vscode-trace-server'
 
@@ -79,7 +79,7 @@ jobs:
       # restore extension from the built-test job
       - uses: actions/download-artifact@v4
         with:
-          name: extension
+          name: extension-${{ matrix.node-version }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -111,7 +111,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: extension
+          name: extension-${{ matrix.node-version }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
