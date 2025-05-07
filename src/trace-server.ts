@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 
 // Based on github.com/eclipse-cdt-cloud/vscode-trace-extension/blob/master/vscode-trace-extension/package.json
 // -for naming consistency purposes across sibling extensions/settings:
+// this is trace-server.ts
 const section = 'trace-server.traceserver';
 const clientSection = 'trace-compass.traceserver';
 
